@@ -3,6 +3,8 @@ import functools
 
 
 def count_time(func):
+    """ The decorator counts the time of the program """
+
     @functools.wraps(func)
     def inner(*args, **kwargs):
         time_beg = time.time()
@@ -16,7 +18,11 @@ def count_time(func):
 
 @count_time
 def foo(x):
-    return x ** 2
+    for i in range(10000):
+        for j in range(10000):
+            pass
+    return x
 
 
-print(foo(5))
+if __name__ == '__main__':
+    print(foo(2))
