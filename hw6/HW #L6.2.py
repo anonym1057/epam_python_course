@@ -4,11 +4,19 @@ class ClassPropertyDescr():
     fget is a function to be used for getting an attribute value, and likewise
     """
 
-    def __init__(self, fget):
+    def __init__(self, fget, fset=None):
         self.fget = fget
+        self.fset = fset
 
     def __get__(self, instance, owner):
         return self.fget.__get__(instance, owner)()
+
+    def __set__(self, obj, value):
+        return self.fset.__get__(obj, type(obj))(value)
+
+    def setter(self, func):
+        self.fset = func
+        return self
 
 
 def prop(func):
@@ -24,6 +32,7 @@ class Something:
     """
     Class doing something
     """
+
     def __init__(self, x):
         self.x = x
 
@@ -34,3 +43,15 @@ class Something:
         :return: square of a x
         """
         return self.x ** 2
+
+    @attr.setter
+    def attr_setter(self, update):
+        self.x = update
+        return
+
+
+if __name__ == '__main__':
+    s = Something(10)
+    print(s.attr)
+    s.attr=3
+    print(s.attr)
