@@ -71,14 +71,11 @@ class Currency:
     def __init__(self, value):
         self.value = value
 
-
     def __repr__(self):
         return str(self.value) + self.get_sign()
 
-
     def __str__(self):
         return str(self.value) + self.get_sign()
-
 
     @abc.abstractmethod
     def get_sign(self):
@@ -88,7 +85,6 @@ class Currency:
         """
         pass
 
-
     def to(self, cls):
         """
         Переводит валюту в валюту класса cls
@@ -96,14 +92,13 @@ class Currency:
         :return: instance: экземпляр класса наследуемый от Currency
         """
         if issubclass(cls, Currency):
-            #инициализируем экземмляр
+            # инициализируем экземмляр
             curr = cls(0)
-            #копируем значение value
+            # копируем значение value
             curr.__dict__['value'] = Currency.get_real_value(self)
             return curr
         else:
             raise TypeError(f"Invalid type {type(other)}")
-
 
     @staticmethod
     def get_real_value(instance):
@@ -112,13 +107,10 @@ class Currency:
         :param instance: экземпляр класс
         :return: value: Decimal
         """
-        if 'value'  in instance.__dict__:
+        if 'value' in instance.__dict__:
             return instance.__dict__['value']
         else:
             raise TypeError("Invalid type")
-
-
-
 
     def __add__(self, other):
         if isinstance(other, Currency):
@@ -128,13 +120,11 @@ class Currency:
         else:
             raise TypeError(f"Invalid type {type(other)}")
 
-
     def __radd__(self, other):
         if type(other) == (int) and other == 0:
             return self.to(self.__class__)
         else:
             raise TypeError(f"Invalid type {type(other)}.")
-
 
     def __sub__(self, other):
         if isinstance(other, Currency):
@@ -144,6 +134,32 @@ class Currency:
         else:
             raise TypeError(f"Invalid type {type(other)}")
 
+    def __mul__(self, other):
+        try:
+            val=self.value*other
+        except TypeError as e:
+            print(e,"Invalid format")
+        else:
+            return self.__class__(val)
+
+
+    def __rmul__(self, other):
+        try:
+            val=self.value*other
+        except TypeError as e:
+            print(e,"Invalid format")
+        else:
+            return self.__class__(val)
+
+    def __truediv__(self,other):
+        try:
+            val=self.value/other
+        except TypeError as e:
+            print(e,"Invalid format")
+        except ZeroDivisionError as e:
+            print(e,"Invalid format")
+        else:
+            return self.__class__(val)
 
     @functools.total_ordering
     def __eq__(self, other):
@@ -241,4 +257,5 @@ if __name__=='__main__':
     print("e: ",e)
     print("Euro.course(Dollar): ", Euro.course(Dollar))
     print("Euro.course(Ruble): ",Euro.course(Ruble))
+
 
