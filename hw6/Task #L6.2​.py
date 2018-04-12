@@ -35,7 +35,6 @@ class Vehicle(metaclass=abc.ABCMeta):
         :return: boo: price of the vehicle
         """
         return self.base_price - 0.1 * self.mileage
-        pass
 
 
 class Car(Vehicle):
@@ -44,6 +43,7 @@ class Car(Vehicle):
     """
     def __init__(self, model, year, mileage, base_price):
         super().__init__(4, model, year, mileage, base_price)
+
 
     def vehicle_type(self):
         return "Car"
@@ -56,6 +56,7 @@ class Motocycle(Vehicle):
     def __init__(self, model, year, mileage, base_price):
         super().__init__(2, model, year, mileage, base_price)
 
+
     def vehicle_type(self):
         return "Motocycle"
 
@@ -67,6 +68,7 @@ class Truck(Vehicle):
     def __init__(self, model, year, mileage, base_price):
         super().__init__(4, model, year, mileage, base_price)
 
+
     def vehicle_type(self):
         return "Truck"
 
@@ -77,6 +79,7 @@ class Bus(Vehicle):
     """
     def __init__(self, model, year, mileage, base_price):
         super().__init__(4, model, year, mileage, base_price)
+
 
     def vehicle_type(self):
         return "Bus"

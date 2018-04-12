@@ -5,12 +5,14 @@ class Price:
     def __init__(self, label):
         self.label = label
 
+
     def __get__(self, instance, owner):
         print("get")
         if self.label in instance.__dict__:
             return instance.__dict__[self.label]
         else:
             print(f"{self.label} delete")
+
 
     def __set__(self, instance, value):
         if (value < 0 or value > 100):
@@ -19,10 +21,10 @@ class Price:
             print("set")
             instance.__dict__[self.label] = value
 
+
     def __delete__(self, instance):
         print("del")
         del instance.__dict__[self.label]
-        pass
 
 
 class Book:
@@ -49,4 +51,3 @@ if __name__ == '__main__':
     del b.price
     print("del b.price")
     print("b.price: ", b.price)
-    pass
