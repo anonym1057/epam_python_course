@@ -7,7 +7,7 @@ dc.Context(prec=10, rounding=dc.ROUND_HALF_UP)
 
 class CurrencyDescr:
     """
-
+        Дескриптор для атрибура value класса Сurrecncy
     """
     def __init__(self, label):
         self.label = label
@@ -18,6 +18,7 @@ class CurrencyDescr:
 
 
     def __set__(self, instance, value):
+        #tесли значение не отрицательное
         if (value < 0):
             raise ValueError("Invalid!")
         else:
@@ -26,7 +27,7 @@ class CurrencyDescr:
 
 class course_dec(dc.Decimal):
     """
-
+        Класс, наследуемый от Decimal определяющий метод call
     """
     def __call__(self, cls):
         return dc.Decimal(self / cls.course).quantize(dc.Decimal('.01'))
@@ -40,6 +41,9 @@ class course_dec(dc.Decimal):
 
 
 class CourseDescr:
+    """
+    Дескриптор для атрибута course наследников класса Currency
+    """
     def __init__(self):
         self.value = course_dec(0)
 
@@ -58,7 +62,9 @@ class CourseDescr:
 @functools.total_ordering
 class Currency:
     """
-
+    Абстрактный класс валюты.
+    Значение разных валют храняться в валюте dollar
+    value - количество
     """
     value = CurrencyDescr('value')
 
@@ -77,20 +83,22 @@ class Currency:
     @abc.abstractmethod
     def get_sign(self):
         """
-
-        :return:
+        Возвращает знак валюты
+        :return: str
         """
         pass
 
 
     def to(self, cls):
         """
-
-        :param cls:
-        :return:
+        Переводит валюту в валюту класса cls
+        :param cls: класс наследуемый от Currency
+        :return: instance: экземпляр класса наследуемый от Currency
         """
         if issubclass(cls, Currency):
+            #инициализируем экземмляр
             curr = cls(0)
+            #копируем значение value
             curr.__dict__['value'] = Currency.get_real_value(self)
             return curr
         else:
@@ -100,11 +108,16 @@ class Currency:
     @staticmethod
     def get_real_value(instance):
         """
-
-        :param instance:
-        :return:
+        Возвращает истинное значение value  в dollar
+        :param instance: экземпляр класс
+        :return: value: Decimal
         """
-        return instance.__dict__['value']
+        if 'value'  in instance.__dict__:
+            return instance.__dict__['value']
+        else:
+            raise TypeError("Invalid type")
+
+
 
 
     def __add__(self, other):
@@ -149,9 +162,11 @@ class Currency:
 
 class Dollar(Currency):
     """
-
+    Класс валюты Доллар
     """
+    #была ли иниализация
     default_init=False
+    #общий курс  для всех экземпляров
     course = CourseDescr()
 
     def __init__(self, value):
@@ -167,9 +182,11 @@ class Dollar(Currency):
 
 class Euro(Currency):
     """
-
+    Класс валюты Евро
     """
+    # общий курс  для всех экземпларов
     course = CourseDescr()
+    # была ли иниализация
     default_init = False
 
     def __init__(self, value):
@@ -185,9 +202,11 @@ class Euro(Currency):
 
 class Ruble(Currency):
     """
-
+    Класс валюты Рубль
     """
+    # общий курс  для всех экземпларов
     course = CourseDescr()
+    # была ли иниализация
     default_init = False
 
     def __init__(self, value):
