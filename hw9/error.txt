@@ -1,0 +1,7 @@
+Date start: 2018-04-18 14:27:43.023315,
+Date end: 2018-04-18 14:27:51.449349
+Time execute: 8.43 sec
+Error: division by zero
+Traceback: 
+  File "C:/Users/nosov/OneDrive/Рабочий стол/python/hw9/HW #L9.1.py", line 33, in <module>
+    2/0
