@@ -1,36 +1,44 @@
 """
-File calculate area of triangles use point from user
+File containt functions tha calculate area of triangles useing points from user
 
 """
 
 import itertools
-from numpy import sqrt
+from math import sqrt
+
+def get_input():
+    """
+    Return input function
+    :return:
+    """
+    return input();
+
 
 
 def get_area_triangle_from_point():
     """
-    Return area of triangles. User write points vertex as cootdinats.
+    Returns area of triangle. User inputs points as cootdinates.
 
-    :return: float or None -- area of triangles if input is correct
+    :return: float or None -- returns area of triangle if input is correct
     """
-    res_input = get_points_triangle()
+    res_input = get_vertex_triangle()
     if (not res_input[0]):
         return None
     else:
         return calculate_area_triangle(res_input[1])
 
 
-def get_points_triangle():
+def get_vertex_triangle():
     """
-    Get point of vertex from user.
+    Get points of vertex from user.
 
-    :return: tuple(bool,list) -- first arg true - correct input, false -  other, list - correct point of vertex
+    :return: tuple(bool,list) -- if first arg is true - then correct input, else.
     """
     print("Enter coordinats vertex\n", "Format:\n'x1 y1 \n x2 y2 \n x3 y3'")
     tmp = []
     vertex = []
     for i in range(1, 4):
-        tmp.append(input(f"Vertex {i}: ").split())
+        tmp.append(get_input(f"Vertex {i}: ").split())
 
     for point in tmp:
         if len(point) != 2:
@@ -53,12 +61,12 @@ def get_points_triangle():
         return True, vertex
 
 
-def calculate_area_triangle(vertex):
+def calculate_area_triangle(vertex: list) -> float:
     """
-    Calculate area of triangles
+    Calculates area of triangles
 
-    :param vertex: list of point of vertex.
-    :type value: list of list
+    :param vertex: list of points of vertex.
+    :type value: list of lists
     :return: float -- area of triangles
 
     >>> calculate_area_triangle([[0,0],[1,0],[0,2]])
@@ -88,9 +96,9 @@ def calculate_area_triangle(vertex):
 
 def is_vertex_triangle(vertex):
     """
-    Check list of vertex correcting. Raise error if vertex is't correct
-    :param vertex: point of vertex
-    :type vertex: list of list
+    Checks if list of vertex is correct. Raise error if vertex is not correct
+    :param vertex: points of vertex
+    :type vertex: list of lists
     :return:None
 
 
@@ -134,4 +142,4 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
     #print(get_area_triangle_from_point())
-    #print(calculate_area_triangle([[0,'a'],[1,0],[0,2]]))
+    #print(calculate_area_triangle([[0,0],[1,0],[0,2]]))
