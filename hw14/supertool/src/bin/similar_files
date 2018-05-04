@@ -1,0 +1,20 @@
+#! /usr/bin/env python
+
+import argparse
+from supertool import similar_files
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser(description='Find similar files')
+    parser.add_argument('directory',type=str,help='target_directory')
+    args = parser.parse_args()
+
+    res=similar_files.work(args.directory)
+    print("Similar files:")
+
+    for similar_files in res:
+        print('\n')
+        for files in similar_files:
+            print(files)
+
+        print("-------------------------------------------")
+        print("Count:",len(similar_files))
