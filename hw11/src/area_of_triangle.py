@@ -6,12 +6,12 @@ File containt functions tha calculate area of triangles useing points from user
 import itertools
 from math import sqrt
 
-def get_input():
+def get_input(string):
     """
     Return input function
     :return:
     """
-    return input();
+    return input(string);
 
 
 
@@ -142,4 +142,3 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
     #print(get_area_triangle_from_point())
-    #print(calculate_area_triangle([[0,0],[1,0],[0,2]]))
