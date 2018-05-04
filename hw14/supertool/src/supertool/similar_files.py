@@ -8,18 +8,18 @@ import hashlib
 from collections import Counter
 
 
-def get_all_path_file(directory, paths_file):
+def get_all_path_file(directory):
     """
     Returns all file pathes contains in this directory
 
     :param directory: directory
     :type directory: str
-    :param paths_file: list append file pathes
-    :type paths_file: list(str)
-    :return: None
+    :return: list -- name file with path
     """
+    paths_file=[]
     for folder, subfilder, files in os.walk(directory):
         paths_file += (list(map(lambda x: os.path.join(folder, x), files)))
+    return paths_file
 
 
 def get_hash_files(fnamelst):
@@ -30,7 +30,16 @@ def get_hash_files(fnamelst):
     :type fnamelst: list(str)
     :return: list(hex) -- List with hashes of file pathes
     """
-    return [hashlib.md5(open(fname, 'rb').read()).digest() for fname in fnamelst]
+
+    hash_list=[]
+    for fname in fnamelst:
+        hash_md5 = hashlib.md5()
+        with open(fname, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        hash_list.append(hash_md5.hexdigest())
+    return hash_list
+    #return [hashlib.md5(open(fname, 'rb').read()).digest() for fname in fnamelst]
 
 
 def work(directory):
@@ -40,16 +49,16 @@ def work(directory):
     :return: list(list(str)) -- list of list of similar_files
     """
     # проверяем, валидна ли директория
-    if not os.path.exists(directory):
-        print("Directory does not exists")
+    if not os.path.exists(str(directory)):
+        print(f"Directory {directory} does not exists")
         return []
 
     # сгенерируем список путей в листе
-    path_files = []
-    get_all_path_file(directory, path_files)
+    path_files = get_all_path_file(directory)
 
     # сгенерируем для всех файлов хэш
     hash_files = get_hash_files(path_files)
+
     # посчитываем
     counter_hash = Counter(hash_files)
 
