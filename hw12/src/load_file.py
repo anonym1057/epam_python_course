@@ -1,21 +1,18 @@
+"""
+Creates thumbnail from pictures at url adress. Url addresses are stored in a text file.
+"""
+
 import argparse
 import os
 import requests
 import errno
 import functools
 import time
+from multiprocessing.pool import ThreadPool
+from multiprocessing import Lock
 from io import BytesIO
 from PIL import Image
 
-"""
-1. распарсить аргументы
-arguments format
-"файл__со_списком_юрл 
---директория_для_сохранения 
---количество_потоков 
---размер_изобвражения "
-
-"""
 
 
 def get_urls_from_file(name_file):
@@ -48,7 +45,10 @@ def get_urls_from_file(name_file):
 def create_path(path):
     """
     Create path if path does not exist
-    :return:
+
+    :param path: path file
+    :type path: str
+    :return: None
     """
     if not os.path.exists(path):
         split_path = os.path.split(path)
@@ -62,8 +62,22 @@ def create_path(path):
                 raise
 
 
-def load_file_from_url_and_save(url_file, save_number, save_path,size_thumbnail, list_info):
+def create_thumbnail(url_file_enum, save_path, size_thumbnail):
+    """
+    Creates thumbnail from images.
+    Pictures are downloaded from the url address and saved with the name of the sequence number.
+
+    :param url_file_enum: numbered url list
+    :type url_file_enum: tuple(int,str)
+    :param save_path: image save path
+    :type save_path: std
+    :param size_thumbnail:size thumbnail
+    :type size_thumbnail: tuple(int,int)
+    :return: class Load_info
+    """
     format_img = 'jpeg'
+    save_number = url_file_enum[0]
+    url_file = url_file_enum[1]
 
     info = Load_info(url_file, save_number)
 
@@ -87,7 +101,7 @@ def load_file_from_url_and_save(url_file, save_number, save_path,size_thumbnail,
                 img = img.convert('RGB')
 
                 name_file = '%05d' % (save_number) + '.' + format_img
-                img.save(os.path.join(save_path, name_file),format='jpeg')
+                img.save(os.path.join(save_path, name_file), format='jpeg')
             except Exception as e:
                 info.sucsess = False
                 info.exception = str(e)
@@ -96,14 +110,21 @@ def load_file_from_url_and_save(url_file, save_number, save_path,size_thumbnail,
                 info.name_file = name_file
                 info.save_path = save_path
                 info.size = img.size
-    # img = Image.open(BytesIO(resp.content))
 
-    # img.save(os.path.join(save_path, '%05d' % (save_number) + '.' + format_img))
+    lock = Lock()
+    lock.acquire()
     info.end_processing()
-    list_info.append(info)
+    lock.release()
+    return info
 
 
 class Load_info:
+    """
+    Saves information about the consequences of downloading.
+    In case of success=True :url, load_bytes, save_path ,name_file,size
+    In case of failure(success=False): url, load_bytes,exception
+    """
+
     def __init__(self, url, number):
         self.url = url
         self.enum = number
@@ -119,7 +140,10 @@ class Load_info:
         self.exception = ''
 
     def end_processing(self):
-        #print('------------------------------------------')
+        """
+        Output information after download
+
+        """
         print(self.enum)
         print(self.url)
         print('Result: ', end='')
@@ -131,14 +155,22 @@ class Load_info:
 
     @staticmethod
     def print_statistic(list_info, time):
+        """
+        Display statistics after all downloads.
+
+        :param list_info: Load info classes to include in statistics
+        :type list_info: list(Load_info)
+        :param time: lead time
+        :type time: float
+        :return:
+        """
         print("Count loads file: ", len(list(filter(lambda x: x.sucsess, list_info))))
         print("Load byte: ", functools.reduce(lambda x, y: x + y.load_bytes, list_info, 0), 'bytes')
         print("Load fail: ", len(list(filter(lambda x: not x.sucsess, list_info))))
-        print("Time: ", '%.2f'%(time),'sec')
+        print("Time: ", '%.2f' % (time), 'sec')
 
 
 if __name__ == '__main__':
-    print("Hello")
     parser = argparse.ArgumentParser(description='Load files')
     parser.add_argument('directory', type=str, help='')
     parser.add_argument('--dir', default='.', type=str, help='')
@@ -146,22 +178,29 @@ if __name__ == '__main__':
     parser.add_argument('--size', default='100x100', type=str, help='')
 
     args = parser.parse_args()
+    # парсим размер
+    size = tuple(map(lambda x: int(x), args.size.split('x')))
 
-    # создаем путь, если его не существуе
+    # создаем путь, если его не существует
     create_path(args.dir)
 
-    # скачиваем из файлв юрл
-    urls = get_urls_from_file(args.directory)
-    size=tuple(map(lambda x: int(x),args.size.split('x')))
+    # скачиваем юрл из файлв
+    images = get_urls_from_file(args.directory)
 
-    list_info = []
+    # сокращаем аргументы
+    part_create_thumbnail = functools.partial(create_thumbnail, save_path=args.dir, size_thumbnail=size)
 
-    # скачиваем  и сохраняем в заданную директорию с заданным именем
+    # создаем пул
+    pool = ThreadPool(args.threads)
 
-    time1=time.time()
-    for i, url in enumerate(urls):
-        load_file_from_url_and_save(url, i, args.dir,size, list_info)
+    # запускам параллельное вычисление
+    time1 = time.time()
+    result = list(pool.map(part_create_thumbnail, enumerate(images)))
+    time2 = time.time()
 
-    #выводи статистику
-    time2=time.time()
-    Load_info.print_statistic(list_info,time2-time1)
+    # закрываем потоки
+    pool.close()
+    pool.join()
+
+    # выводи статистику
+    Load_info.print_statistic(result, time2 - time1)
