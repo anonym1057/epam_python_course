@@ -1,0 +1,11 @@
+setup.py
+bin/similar_files
+bin/weather
+supertool/__init__.py
+supertool/similar_files.py
+supertool/weather.py
+supertool_distro.egg-info/PKG-INFO
+supertool_distro.egg-info/SOURCES.txt
+supertool_distro.egg-info/dependency_links.txt
+supertool_distro.egg-info/requires.txt
+supertool_distro.egg-info/top_level.txt
