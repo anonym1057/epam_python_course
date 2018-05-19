@@ -180,6 +180,10 @@ class CalculateWidget(QtWidgets.QWidget):
                     res = a / b
                 else:
                     res = 'На 0 делить нельзя'
+                    self.stack_operation.append('=')
+                    self.stack_operation.append(str(res))
+                    self.display_stack()
+                    return
             else:
                 res = a ** b
             self.stack_operation.append('=')

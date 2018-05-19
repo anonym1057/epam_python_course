@@ -2,6 +2,7 @@ import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
 import supertool.main_window_form as main_form
 import supertool.calculate_ui as calc_ui
+import supertool.weather_ui as weat_ui
 import functools
 
 #C:\Users\nosov\venv\qtt\Scripts\pyuic5.exe my_form.ui -o my_form.py
@@ -16,33 +17,34 @@ class MainApplication(QtWidgets.QMainWindow):
         self.ui = main_form.Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.buttom_calc.clicked.connect(self.buttom_calculate_pressed)
-        self.ui.buttom_similar_file.clicked.connect(self.buttom_similar_files_pressed)
-        self.ui.buttom_weather.clicked.connect(self.buttom_weather_pressed())
+        self.ui.buttom_weather.clicked.connect(self.button_weather_pressed)
+        self.ui.buttom_calc.clicked.connect(self.button_calculate_pressed)
+        self.ui.buttom_similar_file.clicked.connect(self.button_similar_files_pressed)
+
+        self.w = weat_ui.WeatherWidget1()
+        self.c = calc_ui.CalculateWidget()
 
 
-
-    def buttom_calculate_pressed(self):
+    def button_calculate_pressed(self):
         """
         Connected func for ui.bottom_calc.
         Opens a calculator window.
 
         :return: None
         """
-        c=calc_ui.CalculateWidget()
-        c.show()
+        self.c.show()
 
-    def buttom_weather_pressed(self):
+    def button_weather_pressed(self):
         """
         Connected func for ui.bottom_calc.
         Opens a weather window.
 
         :return: None
         """
+        #w= weat_ui.WeatherWidget1()
+        self.w.show()
 
-
-
-    def buttom_similar_files_pressed(self):
+    def button_similar_files_pressed(self):
         """
         Connected func for ui.bottom_calc.
         Opens a fimilar_files window.
@@ -59,3 +61,4 @@ def run():
     window = MainApplication()
     window.show()
     sys.exit(app.exec_())
+

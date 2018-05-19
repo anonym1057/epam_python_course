@@ -1,0 +1,18 @@
+"""
+Print current weather and weather forecast
+"""
+import argparse
+from supertool import weather
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Print current weather and weather forecast')
+    parser.add_argument('--address', default='Saint Petersburg, Russia', type=str, help='address')
+    args = parser.parse_args()
+
+    coordinates = weather.get_location_coordinates(args.address)
+    if (coordinates == 200):
+        print("Not found location for adress")
+    else:
+
+        weather.print_current_weather(coordinates[0], coordinates[1],coordinates[2])
+        weather.print_weather_forecast(coordinates[0], coordinates[1],coordinates[2])
