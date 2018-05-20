@@ -1,9 +1,10 @@
 import sys
-from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5 import QtWidgets
 import supertool.main_window_form as main_form
 import supertool.calculate_ui as calc_ui
 import supertool.weather_ui as weat_ui
-import functools
+import supertool.similar_files_ui as files_ui
+
 
 #C:\Users\nosov\venv\qtt\Scripts\pyuic5.exe my_form.ui -o my_form.py
 
@@ -23,6 +24,7 @@ class MainApplication(QtWidgets.QMainWindow):
 
         self.w = weat_ui.WeatherWidget1()
         self.c = calc_ui.CalculateWidget()
+        self.s=files_ui.SimilarFilesWidget()
 
 
     def button_calculate_pressed(self):
@@ -51,6 +53,7 @@ class MainApplication(QtWidgets.QMainWindow):
 
         :return: None
         """
+        self.s.show()
 
 def run():
     """

@@ -12,6 +12,8 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(529, 507)
+        Form.setMinimumSize(QtCore.QSize(529, 507))
+        Form.setMaximumSize(QtCore.QSize(529, 507))
         self.pushButton_div = QtWidgets.QPushButton(Form)
         self.pushButton_div.setGeometry(QtCore.QRect(400, 350, 91, 61))
         font = QtGui.QFont()
@@ -86,7 +88,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Calculator"))
         self.pushButton_div.setText(_translate("Form", "-"))
         self.pushButton_plus.setText(_translate("Form", "+"))
         self.pushButton_step.setText(_translate("Form", "^"))

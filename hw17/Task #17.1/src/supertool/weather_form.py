@@ -18,6 +18,7 @@ class Ui_WeatherWidget(object):
         sizePolicy.setHeightForWidth(WeatherWidget.sizePolicy().hasHeightForWidth())
         WeatherWidget.setSizePolicy(sizePolicy)
         WeatherWidget.setMinimumSize(QtCore.QSize(640, 725))
+        WeatherWidget.setMaximumSize(QtCore.QSize(640, 725))
         WeatherWidget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.button_submit = QtWidgets.QPushButton(WeatherWidget)
         self.button_submit.setGeometry(QtCore.QRect(460, 10, 141, 41))

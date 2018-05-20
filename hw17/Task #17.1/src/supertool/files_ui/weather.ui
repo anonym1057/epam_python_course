@@ -22,6 +22,12 @@
     <height>725</height>
    </size>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>640</width>
+    <height>725</height>
+   </size>
+  </property>
   <property name="cursor">
    <cursorShape>ArrowCursor</cursorShape>
   </property>

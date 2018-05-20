@@ -18,7 +18,7 @@ def get_all_path_file(directory):
     """
     paths_file=[]
     for folder, subfilder, files in os.walk(directory):
-        paths_file += (list(map(lambda x: os.path.join(folder, x), files)))
+        paths_file += (list(map(lambda x: os.path.join(folder,x), files)))
     return paths_file
 
 
